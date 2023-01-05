@@ -27,7 +27,7 @@ public class CidadeController {
         return cidadeRepository.listar();
     }
 
-    @GetMapping("/cidadeId")
+    @GetMapping("/{cidadeId}")
     public ResponseEntity<Cidade> buscar(@PathVariable Long cidadeId){
         Cidade cidade = cidadeRepository.buscar(cidadeId);
 
@@ -83,5 +83,7 @@ public class CidadeController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }
+
+
 
 }
