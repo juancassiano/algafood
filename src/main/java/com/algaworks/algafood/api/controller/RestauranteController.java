@@ -72,7 +72,7 @@ public class RestauranteController {
     @PatchMapping("/{restauranteId}")
     public ResponseEntity<?> atualizarParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos){
 
-        Restaurante restauranteAtual = restauranteRepository.buscar(restauranteId);
+        Restaurante restauranteAtual = restauranteRepository.findById(restauranteId).orElse(null);
 
         if(restauranteAtual == null){
             return ResponseEntity.notFound().build();
@@ -96,4 +96,5 @@ public class RestauranteController {
             ReflectionUtils.setField(field, restauranteDestino, novoValor);
         });
     }
+
 }
