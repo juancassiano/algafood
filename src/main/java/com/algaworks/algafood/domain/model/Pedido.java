@@ -23,6 +23,8 @@ public class Pedido {
     @Embedded
     private Endereco enderecoEntrega;
 
+    private StatusPedido status;
+
     private BigDecimal subtotal;
 
     private BigDecimal taxaFrete;
