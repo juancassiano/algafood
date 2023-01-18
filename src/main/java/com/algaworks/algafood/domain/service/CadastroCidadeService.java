@@ -23,13 +23,12 @@ public class CadastroCidadeService {
     @Autowired
     private EstadoRepository estadoRepository;
 
+    @Autowired
+    private CadastroEstadoService cadastroEstadoService;
+
     public Cidade salvar(Cidade cidade){
         Long estadoId = cidade.getEstado().getId();
-        Estado estado = estadoRepository.findById(estadoId).orElseThrow(() ->
-                new EntidadeNaoEncontradaException(
-                        String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId)
-                )
-        );
+        Estado estado = cadastroEstadoService.buscarOuFalhar(estadoId);
 
         cidade.setEstado(estado);
         return cidadeRepository.save(cidade);
