@@ -33,14 +33,9 @@ public class CozinhaController {
     }
 
     @GetMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha> buscar(@PathVariable Long cozinhaId) {
+    public Cozinha buscar(@PathVariable Long cozinhaId) {
 
-        Optional<Cozinha> cozinha = cozinhaRepository.findById(cozinhaId);
-
-        if (cozinha.isPresent()) {
-            return ResponseEntity.ok(cozinha.get());
-        }
-        return ResponseEntity.notFound().build();
+        return cadastroCozinhaService.buscarOuFalhar(cozinhaId);
     }
 
     @PostMapping()
@@ -55,30 +50,13 @@ public class CozinhaController {
     }
 
     @PutMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
-        Optional<Cozinha> cozinhaAtual = cozinhaRepository.findById(cozinhaId);
-//        cozinhaAtual.setNome(cozinha.getNome());
-        if (cozinhaAtual.isPresent()) {
-            BeanUtils.copyProperties(cozinha, cozinhaAtual.get(), "id");
-            Cozinha cozinhaSalva = cadastroCozinhaService.salvar(cozinhaAtual.get());
-            return ResponseEntity.ok(cozinhaSalva);
-        }
-        return ResponseEntity.notFound().build();
+    public Cozinha atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
+        Cozinha cozinhaAtual = cadastroCozinhaService.buscarOuFalhar(cozinhaId);
+
+            BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
+            return cadastroCozinhaService.salvar(cozinhaAtual);
     }
 
-//    @DeleteMapping("/{cozinhaId}")
-//    public ResponseEntity<?> remover(@PathVariable Long cozinhaId) {
-//        try {
-//            cadastroCozinhaService.excluir(cozinhaId);
-//                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-//
-//            }catch (EntidadeNaoEncontradaException e){
-//                return ResponseEntity.notFound().build();
-//
-//        } catch (EntidadeEmUsoException e) {
-//                return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-//        }
-//    }
 
     @DeleteMapping("/{cozinhaId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
