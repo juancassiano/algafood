@@ -1,10 +1,8 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.repository.EstadoRepository;
-import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 import com.algaworks.algafood.domain.service.CadastroEstadoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("estados")
@@ -32,13 +29,9 @@ public class EstadoController {
     }
 
     @GetMapping("/{estadoId}")
-    public ResponseEntity<Estado> buscar(@PathVariable Long estadoId){
-        Optional<Estado> estado = estadoRepository.findById(estadoId);
+    public Estado buscar(@PathVariable Long estadoId){
 
-        if(estado.isPresent()){
-            return ResponseEntity.ok(estado.get());
-        }
-        return ResponseEntity.notFound().build();
+        return cadastroEstadoService.buscarOuFalhar(estadoId);
     }
 
     @PostMapping
@@ -54,31 +47,16 @@ public class EstadoController {
     }
 
     @PutMapping("/{estadoId}")
-    public ResponseEntity<?> atualizar(@PathVariable Long estadoId, @RequestBody Estado estado){
-        try{
-            Estado estadoAtual = estadoRepository.findById(estadoId).orElse(null);
+    public Estado atualizar(@PathVariable Long estadoId, @RequestBody Estado estado){
+        Estado estadoAtual = cadastroEstadoService.buscarOuFalhar(estadoId);
 
-            if(estadoAtual != null){
-                BeanUtils.copyProperties(estado, estadoAtual, "id");
-                cadastroEstadoService.salvar(estadoAtual);
-                return ResponseEntity.ok(estadoAtual);
-            }
-            return ResponseEntity.notFound().build();
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        BeanUtils.copyProperties(estado, estadoAtual, "id");
+        return cadastroEstadoService.salvar(estadoAtual);
     }
 
     @DeleteMapping("/{estadoId}")
-    public ResponseEntity<?> remover(@PathVariable Long estadoId){
-        try{
-            cadastroEstadoService.excluir(estadoId);
-
-            return ResponseEntity.noContent().build();
-        }catch(EntidadeNaoEncontradaException e){
-            return ResponseEntity.notFound().build();
-        }catch(EntidadeEmUsoException e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long estadoId){
+        cadastroEstadoService.excluir(estadoId);
     }
 }
