@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         if(rootCause instanceof InvalidFormatException) {
             return handleInvalidFormat((InvalidFormatException) rootCause, headers, status, request);
         } else if(rootCause instanceof PropertyBindingException){
-            return handlePropertyBindingException((PropertyBindingException) rootCause, headers, status, request);
+            return handlePropertyBinding((PropertyBindingException) rootCause, headers, status, request);
         }
 
         ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
@@ -47,7 +48,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 status, request);
     }
 
-    private ResponseEntity<Object> handlePropertyBindingException(PropertyBindingException ex, HttpHeaders headers,
+    private ResponseEntity<Object> handlePropertyBinding(PropertyBindingException ex, HttpHeaders headers,
             HttpStatus status, WebRequest request){
         String path = joinPath(ex.getPath());
 
@@ -81,14 +82,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
              HttpHeaders headers, HttpStatus status, WebRequest request){
 
         if(ex instanceof MethodArgumentTypeMismatchException){
-            return handleMethodArgumentTypeMismatchException(
+            return handleMethodArgumentTypeMismatch(
                     (MethodArgumentTypeMismatchException) ex, headers, status, request);
 
         }
         return super.handleTypeMismatch(ex, headers, status, request);
     }
 
-    private ResponseEntity<Object> handleMethodArgumentTypeMismatchException(
+    private ResponseEntity<Object> handleMethodArgumentTypeMismatch(
             MethodArgumentTypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ProblemType problemType = ProblemType.PARAMETRO_INVALIDO;
         String detail = String.format("O parâmetro de URL '%s' recebeu o valor '%s', "
@@ -101,12 +102,23 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     }
 
+    private ResponseEntity<Object> handleNoHandlerFound(NoHandlerFoundException ex,
+             HttpHeaders headers, HttpStatus status, WebRequest request){
+
+        ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
+        String detail = String.format("O recurso '%s' que você tentou acessar, é inexistente.", ex.getRequestURL());
+
+        Problem problem = createProblemBuilder(status, problemType, detail).build();
+
+        return handleExceptionInternal(ex, problem, headers, status, request);
+    }
+
     @ExceptionHandler(EntidadeNaoEncontradaException.class)
-    public ResponseEntity<?> handleEntidadeNaoEncontradoException(
+    public ResponseEntity<?> handleEntidadeNaoEncontrado(
             EntidadeNaoEncontradaException ex, WebRequest request){
 
         HttpStatus status = HttpStatus.NOT_FOUND;
-        ProblemType problemType = ProblemType.ENTIDADE_NAO_ENCONTRADA;
+        ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
         String detail = ex.getMessage();
 
         Problem problem = createProblemBuilder(status, problemType, detail).build();
@@ -115,7 +127,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 status, request);
     }
     @ExceptionHandler(NegocioException.class)
-    public ResponseEntity<?> handleNegocioException(NegocioException ex, WebRequest request){
+    public ResponseEntity<?> handleNegocio(NegocioException ex, WebRequest request){
         HttpStatus status = HttpStatus.BAD_REQUEST;
         String detail = ex.getMessage();
         ProblemType problemType = ProblemType.ERRO_NEGOCIO;
@@ -127,7 +139,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(EntidadeEmUsoException.class)
-    public ResponseEntity<?> handleEntidadeEmUsoException(NegocioException ex, WebRequest request){
+    public ResponseEntity<?> handleEntidadeEmUso(NegocioException ex, WebRequest request){
         HttpStatus status = HttpStatus.CONFLICT;
         String detail = ex.getMessage();
         ProblemType problemType = ProblemType.ENTIDADE_EM_USO;
