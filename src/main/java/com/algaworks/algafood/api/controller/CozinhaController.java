@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +40,7 @@ public class CozinhaController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> adicionar(@RequestBody Cozinha cozinha) {
+    public ResponseEntity<?> adicionar(@RequestBody @Valid Cozinha cozinha) {
         try{
             Cozinha cozinhaAtual = cadastroCozinhaService.salvar(cozinha);
 
