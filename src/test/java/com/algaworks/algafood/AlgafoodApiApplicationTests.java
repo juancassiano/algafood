@@ -1,5 +1,7 @@
 package com.algaworks.algafood;
 
+import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 import org.junit.jupiter.api.Assertions;
@@ -18,7 +20,7 @@ class CadastroCozinhaIntegrationTests {
 	@Autowired
 	private CadastroCozinhaService cadastroCozinha;
 	@Test
-	public void testarCadastroCozinhaComSucesso(){
+	public void deveAtribuirId_QuandoCadastrarCozinhaComDadosCorretos(){
 		Cozinha novaCozinha = new Cozinha();
 		novaCozinha.setNome("Chinesa");
 
@@ -29,7 +31,7 @@ class CadastroCozinhaIntegrationTests {
 	}
 
 	@Test
-	public void testarCadastroCozinhaSemNome(){
+	public void deveFalhar_QuandoCadastrarCozinhaSemNome(){
 		Cozinha novaCozinha = new Cozinha();
 		novaCozinha.setNome(null);
 
@@ -42,4 +44,23 @@ class CadastroCozinhaIntegrationTests {
 		assertThat(erroEsperado).isNotNull();
 	}
 
+	@Test
+	public void deveFalhar_QuandoExcluirCozinhaEmUso(){
+		EntidadeEmUsoException erroEsperado = Assertions.assertThrows(
+				EntidadeEmUsoException.class, () -> {
+					cadastroCozinha.excluir(1L);
+				}
+		);
+		assertThat(erroEsperado).isNotNull();
+	}
+
+	@Test
+	public void deveFalhar_QuandoExcluirCozinhaInexistente() {
+		CozinhaNaoEncontradaException erroEsperado = Assertions.assertThrows(
+				CozinhaNaoEncontradaException.class, () -> {
+					cadastroCozinha.excluir(100L);
+				}
+		);
+		assertThat(erroEsperado).isNotNull();
+	}
 }
