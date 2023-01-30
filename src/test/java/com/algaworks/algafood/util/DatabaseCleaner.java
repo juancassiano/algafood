@@ -1,4 +1,4 @@
-package util;
+package com.algaworks.algafood.util;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
