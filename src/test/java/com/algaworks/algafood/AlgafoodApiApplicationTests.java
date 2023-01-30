@@ -1,66 +1,72 @@
 package com.algaworks.algafood;
 
-import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
-import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
-import com.algaworks.algafood.domain.model.Cozinha;
-import com.algaworks.algafood.domain.service.CadastroCozinhaService;
-import org.junit.jupiter.api.Assertions;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.matcher.ResponseAwareMatcher;
+import org.flywaydb.core.Flyway;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
-class CadastroCozinhaIntegrationTests {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class CadastroCozinhaIT {
+
+	@LocalServerPort
+	private int port;
 
 	@Autowired
-	private CadastroCozinhaService cadastroCozinha;
-	@Test
-	public void deveAtribuirId_QuandoCadastrarCozinhaComDadosCorretos(){
-		Cozinha novaCozinha = new Cozinha();
-		novaCozinha.setNome("Chinesa");
+	private Flyway flyway;
 
-		cadastroCozinha.salvar(novaCozinha);
+	@BeforeEach
+	public void setUp() {
+		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+		RestAssured.port = port;
+		RestAssured.basePath = "/cozinhas";
 
-		assertThat(novaCozinha).isNotNull();
-		assertThat(novaCozinha.getId()).isNotNull();
+		flyway.migrate();
 	}
 
 	@Test
-	public void deveFalhar_QuandoCadastrarCozinhaSemNome(){
-		Cozinha novaCozinha = new Cozinha();
-		novaCozinha.setNome(null);
+	public void deveRetornarStatus200_QuandoConsultarCozinhas() {
 
-		ConstraintViolationException erroEsperado = Assertions.assertThrows(
-				ConstraintViolationException.class, () -> {
-					cadastroCozinha.salvar(novaCozinha);
-				}
-		);
-
-		assertThat(erroEsperado).isNotNull();
+		given()
+				.accept(ContentType.JSON)
+				.when()
+				.get()
+				.then()
+				.statusCode(HttpStatus.OK.value());
 	}
 
 	@Test
-	public void deveFalhar_QuandoExcluirCozinhaEmUso(){
-		EntidadeEmUsoException erroEsperado = Assertions.assertThrows(
-				EntidadeEmUsoException.class, () -> {
-					cadastroCozinha.excluir(1L);
-				}
-		);
-		assertThat(erroEsperado).isNotNull();
+	public void deveConter4Cozinhas_QuandoConsultarCozinhas() {
+
+		given()
+				.accept(ContentType.JSON)
+				.when()
+				.get()
+				.then()
+				.body("", hasSize(4))
+				.body("nome", hasItems("Indiana", "Tailandesa"));
 	}
 
 	@Test
-	public void deveFalhar_QuandoExcluirCozinhaInexistente() {
-		CozinhaNaoEncontradaException erroEsperado = Assertions.assertThrows(
-				CozinhaNaoEncontradaException.class, () -> {
-					cadastroCozinha.excluir(100L);
-				}
-		);
-		assertThat(erroEsperado).isNotNull();
+	public void deveRetornarStatus201_QuandoCadastrarCozinha() {
+		given()
+				.body("{ \"nome\": \"Chinesa\"}")
+				.contentType(ContentType.JSON)
+				.accept(ContentType.JSON)
+				.when()
+				.post()
+				.then()
+				.statusCode(HttpStatus.CREATED.value());
 	}
 }
