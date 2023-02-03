@@ -2,6 +2,7 @@ package com.algaworks.algafood.domain.model;
 
 import com.algaworks.algafood.core.validation.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -41,6 +42,7 @@ public class Restaurante {
     @ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
     @NotNull
     @JoinColumn(name = "cozinha_id", nullable = false)
+    @JsonIgnoreProperties(value = "nome", allowGetters = true)
     private Cozinha cozinha;
 
     @JsonIgnore
