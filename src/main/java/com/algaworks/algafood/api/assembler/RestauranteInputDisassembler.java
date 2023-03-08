@@ -16,4 +16,10 @@ public class RestauranteInputDisassembler {
     public Restaurante toDomainObject(RestauranteInput restauranteInput){
         return modelMapper.map(restauranteInput, Restaurante.class);
     }
+
+    public void copyToDomainObject(RestauranteInput restauranteInput, Restaurante restaurante){
+        //Para evitar org.hibernate.HibernateException: identifier of an instance of model.Cozinha was altered from 1 to 2
+        restaurante.setCozinha(new Cozinha());
+        modelMapper.map(restauranteInput, restaurante);
+    }
 }
