@@ -91,6 +91,14 @@ public class Restaurante {
     public void fechar(){
         setAberto(false);
     }
+
+    public boolean aceitaFormaPagamento(FormaPagamento formaPagamento){
+        return getFormasPagamento().contains(formaPagamento);
+    }
+
+    public boolean naoAceitaFormaPagamento(FormaPagamento formaPagamento){
+        return !aceitaFormaPagamento(formaPagamento);
+    }
     
     public boolean removerResponsavel(Usuario usuario){
         return getResponsaveis().remove(usuario);
