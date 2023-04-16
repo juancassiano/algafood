@@ -1,6 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.algaworks.algafood.domain.model.*;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
@@ -8,6 +9,8 @@ import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class CadastroRestauranteService {
@@ -69,10 +72,28 @@ public class CadastroRestauranteService {
     }
 
     @Transactional
+    public void ativar(List<Long> restaurantesIds){
+        try {
+            restaurantesIds.forEach(this::ativar);
+        }catch (RestauranteNaoEncontradoException e){
+            throw new NegocioException(e.getMessage(), e);
+        }
+    }
+
+    @Transactional
     public void inativar(Long restauranteId){
         Restaurante restauranteAtual = buscarOuFalhar(restauranteId);
 
         restauranteAtual.inativar();
+    }
+
+    @Transactional
+    public void inativar(List<Long> restaurantesId){
+        try{
+            restaurantesId.forEach(this::inativar);
+        }catch (RestauranteNaoEncontradoException e){
+            throw new NegocioException(e.getMessage(), e);
+        }
     }
 
     @Transactional

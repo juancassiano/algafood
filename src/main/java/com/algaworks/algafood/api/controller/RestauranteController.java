@@ -100,6 +100,31 @@ public class RestauranteController {
         cadastroRestauranteService.inativar(restauranteId);
     }
 
+    @PutMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativarMultiplos( @RequestBody List<Long> restauranteIds){
+        cadastroRestauranteService.ativar(restauranteIds);
+    }
+
+    @DeleteMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativarMultiplos( @RequestBody List<Long> restauranteIds){
+        cadastroRestauranteService.inativar(restauranteIds);
+    }
+
+    @PutMapping("/{restauranteId}/abertura")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void abrir(@PathVariable Long restauranteId){
+        cadastroRestauranteService.abrir(restauranteId);
+    }
+
+    @PutMapping("/{restauranteId}/fechamento")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void fechar(@PathVariable Long restauranteId){
+        cadastroRestauranteService.fechar(restauranteId);
+    }
+
+
     private void validate(Restaurante restaurante, String objectName) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurante,objectName);
 
@@ -131,18 +156,6 @@ public class RestauranteController {
             Throwable rootCause = ExceptionUtils.getRootCause(e);
             throw new HttpMessageNotReadableException(e.getMessage(), rootCause, serverHttpRequest);
         }
-    }
-
-    @PutMapping("/{restauranteId}/abertura")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void abrir(@PathVariable Long restauranteId){
-        cadastroRestauranteService.abrir(restauranteId);
-    }
-
-    @PutMapping("/{restauranteId}/fechamento")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void fechar(@PathVariable Long restauranteId){
-        cadastroRestauranteService.fechar(restauranteId);
     }
 
 }
