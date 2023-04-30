@@ -17,7 +17,8 @@ public class EnderecoInput {
     private String logradouro;
     @NotBlank
     private String numero;
-    private String comlemento;
+
+    private String complemento;
     @NotBlank
     private String bairro;
     @Valid

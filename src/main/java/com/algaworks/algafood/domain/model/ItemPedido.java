@@ -16,7 +16,7 @@ public class ItemPedido {
     @EqualsAndHashCode.Include
     private Long id;
 
-    private Long quantidade;
+    private Integer quantidade;
 
     private BigDecimal precoUnitario;
 
@@ -31,4 +31,17 @@ public class ItemPedido {
     @ManyToOne
     @JoinColumn(nullable = false)
     private Produto produto;
+
+    public void calcularPrecoTotal(){
+        BigDecimal precoUnitario = this.getPrecoUnitario();
+        Integer quantidade = this.getQuantidade();
+
+        if(precoUnitario == null){
+            precoUnitario = BigDecimal.ZERO;
+        }
+        if(quantidade == null){
+            quantidade = 0;
+        }
+        this.setPrecoTotal(precoUnitario.multiply(new BigDecimal(quantidade)));
+    }
 }
