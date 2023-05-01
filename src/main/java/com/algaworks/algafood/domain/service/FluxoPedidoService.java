@@ -16,40 +16,24 @@ public class FluxoPedidoService {
     private EmissaoPedidoService emissaoPedidoService;
 
     @Transactional
-    public void confirmar(Long pedidoId){
-        Pedido pedido = emissaoPedidoService.buscarOuFalhar(pedidoId);
+    public void confirmar(String codigoPedido){
+        Pedido pedido = emissaoPedidoService.buscarOuFalhar(codigoPedido);
 
-        if(!pedido.getStatus().equals(StatusPedido.CRIADO)){
-            throw new NegocioException(String.format("Status do pedido %d não pode ser alterado para de %s para %s",
-                    pedido.getId(), pedido.getStatus().getDescricao(), StatusPedido.CONFIRMADO.getDescricao()));
-        }
-
-        pedido.setStatus(StatusPedido.CONFIRMADO);
-        pedido.setDataEntrega(OffsetDateTime.now());
+        pedido.confirmar();
     }
 
     @Transactional
-    public void entregar(Long pedidoId){
-        Pedido pedido = emissaoPedidoService.buscarOuFalhar(pedidoId);
+    public void entregar(String codigoPedido){
+        Pedido pedido = emissaoPedidoService.buscarOuFalhar(codigoPedido);
 
-        if(!pedido.getStatus().equals(StatusPedido.CONFIRMADO)){
-            throw new NegocioException((String.format("Status do pedido %d não pode ser alterado de %s para %s",
-                    pedido.getId(), pedido.getStatus().getDescricao(), StatusPedido.ENTREGUE.getDescricao())));
-        }
-        pedido.setStatus(StatusPedido.ENTREGUE);
-        pedido.setDataEntrega(OffsetDateTime.now());
+        pedido.entregar();
     }
 
     @Transactional
-    public void cancelar(Long pedidoId){
-        Pedido pedido = emissaoPedidoService.buscarOuFalhar(pedidoId);
+    public void cancelar(String codigoPedido){
+        Pedido pedido = emissaoPedidoService.buscarOuFalhar(codigoPedido);
 
-        if(!pedido.getStatus().equals(StatusPedido.CRIADO)){
-            throw new NegocioException((String.format("Status do pedido %d não pode ser alterado de %s para %s",
-                    pedido.getId(), pedido.getStatus().getDescricao(), StatusPedido.CANCELADO.getDescricao())));
-        }
-        pedido.setStatus(StatusPedido.CANCELADO);
-        pedido.setDataEntrega(OffsetDateTime.now());
+        pedido.cancelar();
     }
 }
 

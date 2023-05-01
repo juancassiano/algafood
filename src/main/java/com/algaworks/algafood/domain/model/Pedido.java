@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.model;
 
+import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.service.EmissaoPedidoService;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -21,6 +23,8 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String codigo;
 
     @Embedded
     private Endereco enderecoEntrega;
@@ -64,4 +68,32 @@ public class Pedido {
         this.valorTotal = this.subtotal.add(this.taxaFrete);
     }
 
+    public void confirmar(){
+        setStatus(StatusPedido.CONFIRMADO);
+        setDataConfirmacao(OffsetDateTime.now());
+    }
+
+    public void entregar(){
+        setStatus(StatusPedido.ENTREGUE);
+        setDataEntrega(OffsetDateTime.now());
+    }
+
+    public void cancelar(){
+        setStatus(StatusPedido.CANCELADO);
+        setDataCancelamento(OffsetDateTime.now());
+    }
+
+    private void setStatus(StatusPedido novoStatus){
+        if(getStatus().naoPodeAlterarPara(novoStatus)){
+            throw new NegocioException((String.format("Status do pedido %s não pode ser alterado de %s para %s",
+                    getCodigo(), getStatus().getDescricao(), novoStatus.getDescricao())));
+        }
+
+        this.status = novoStatus;
+    }
+
+    @PrePersist
+    private void gerarCodigo(){
+        setCodigo(UUID.randomUUID().toString());
+    }
 }
