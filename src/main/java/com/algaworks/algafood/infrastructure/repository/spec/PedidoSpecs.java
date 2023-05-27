@@ -14,8 +14,8 @@ public class PedidoSpecs {
             root.fetch("cliente");
 
           var predicates = new ArrayList<Predicate>();
-          if(filtro.getClientId() != null){
-              predicates.add(builder.equal(root.get("cliente"), filtro.getClientId()));
+          if(filtro.getClienteId() != null){
+              predicates.add(builder.equal(root.get("cliente"), filtro.getClienteId()));
           }
           if(filtro.getRestauranteId() != null){
               predicates.add(builder.equal(root.get("restaurante"), filtro.getRestauranteId()));
