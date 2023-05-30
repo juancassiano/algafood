@@ -82,6 +82,7 @@ public class PedidoController {
     private Pageable traduzirPageable(Pageable apiPageable){
         var mapeamento = ImmutableMap.of("codigo", "codigo",
                 "nomeCliente", "cliente,nome",
+                "restaurante.nome", "restaurante.nome",
                 "valorTotal", "valorTotal");
 
         return PageableTranslator.translate(apiPageable, mapeamento);
