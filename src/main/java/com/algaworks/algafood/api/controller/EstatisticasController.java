@@ -19,6 +19,9 @@ public class EstatisticasController {
 
     @GetMapping("/vendas-diarias")
     public List<VendaDiaria> consultarVendasDiarias(VendaDiariaFilter filtro){
+
+
+
         return vendaQueryService.consultarVendasDiarias(filtro);
     }
 }
