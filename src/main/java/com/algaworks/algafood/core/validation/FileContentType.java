@@ -14,6 +14,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface FileContentType {
     String message() default "arquivo inválido";
     Class<?>[] groups() default { };
-    Class<? extends Payload>[] payloads() default { };
+    Class<? extends Payload>[] payload() default { };
     String[] allowed();
 }
