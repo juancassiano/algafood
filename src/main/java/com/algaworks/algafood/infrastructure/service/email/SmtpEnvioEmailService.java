@@ -1,6 +1,6 @@
 package com.algaworks.algafood.infrastructure.service.email;
 
-import com.algaworks.algafood.core.core.EmailProperties;
+import com.algaworks.algafood.core.email.EmailProperties;
 import com.algaworks.algafood.domain.service.EnvioEmailService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -12,7 +12,6 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.IOException;
 
 @Service
 public class SmtpEnvioEmailService implements EnvioEmailService{

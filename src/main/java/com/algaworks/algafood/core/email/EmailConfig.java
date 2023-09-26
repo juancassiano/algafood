@@ -1,4 +1,4 @@
-package com.algaworks.algafood.core.core;
+package com.algaworks.algafood.core.email;
 
 import com.algaworks.algafood.domain.service.EnvioEmailService;
 import com.algaworks.algafood.infrastructure.service.email.FakeEnvioEmailService;
