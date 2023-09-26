@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.listener;
 
+import com.algaworks.algafood.domain.event.PedidoCanceladoEvent;
 import com.algaworks.algafood.domain.event.PedidoConfirmadoEvent;
 import com.algaworks.algafood.domain.model.Pedido;
 import com.algaworks.algafood.domain.service.EnvioEmailService;
@@ -14,8 +15,8 @@ public class NotificacaoClientePedidoCanceladoListener {
     @Autowired
     private EnvioEmailService envioEmailService;
 
-    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void aoCancelarPedido(PedidoConfirmadoEvent event){
+    @TransactionalEventListener
+    public void aoCancelarPedido(PedidoCanceladoEvent event){
         Pedido pedido = event.getPedido();
         var mensagem = EnvioEmailService.Mensagem.builder()
                 .assunto(pedido.getRestaurante().getNome() + " - Pedido Cancelado")
