@@ -12,11 +12,10 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class CidadeInput {
 
-    @ApiModelProperty(example = "Rio de Janeiro")
+    @ApiModelProperty(example = "Rio de Janeiro", required = true)
     @NotBlank
     private String nome;
 
-    @ApiModelProperty(example = "1")
     @NotNull
     @Valid
     private EstadoIdInput estado;
