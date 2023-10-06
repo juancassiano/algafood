@@ -1,4 +1,4 @@
-package com.algaworks.algafood.api.openapiController;
+package com.algaworks.algafood.api.openapi.controller;
 
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.algaworks.algafood.api.model.CidadeModel;
