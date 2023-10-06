@@ -62,7 +62,7 @@ public class SpringFoxConfig {
                         typeResolver.resolve(Page.class, CozinhaModel.class),CozinhasModelOpenApi.class))
                 .tags(new Tag("Cidades", "Gerencia as cidades"),
                         new Tag("Grupos", "Gerencia os grupos"),
-                        new Tag("Formas de Pagamento", "Gerencia as formas de pagamento"),
+                        new Tag("Formas de pagamento", "Gerencia as formas de pagamento"),
                         new Tag("Cozinhas", "Gerencia as cozinhas"));
     }
 
