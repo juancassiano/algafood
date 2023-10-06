@@ -1,4 +1,4 @@
-package com.algaworks.algafood.core.openapi.model;
+package com.algaworks.algafood.api.openapiModel;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
