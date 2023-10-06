@@ -42,7 +42,7 @@ public class CozinhaController {
     private CadastroCozinhaService cadastroCozinhaService;
 
     @GetMapping()
-    public Page<CozinhaModel> listar(@PageableDefault(size=2) Pageable pageable) {
+    public Page<CozinhaModel> listar(@PageableDefault(size=10) Pageable pageable) {
 
        Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
 
