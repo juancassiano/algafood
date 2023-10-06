@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.assembler.CozinhaInputDisassembler;
 import com.algaworks.algafood.api.assembler.CozinhaModelAssembler;
 import com.algaworks.algafood.api.model.CozinhaModel;
 import com.algaworks.algafood.api.model.input.CozinhaInput;
+import com.algaworks.algafood.api.openapi.controller.CozinhaControllerOpenApi;
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Cozinha;
@@ -26,8 +27,8 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/cozinhas", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CozinhaController {
+@RequestMapping(value = "/cozinhas")
+public class CozinhaController implements CozinhaControllerOpenApi {
 
     @Autowired
     private CozinhaModelAssembler cozinhaModelAssembler;
@@ -41,7 +42,7 @@ public class CozinhaController {
     @Autowired
     private CadastroCozinhaService cadastroCozinhaService;
 
-    @GetMapping()
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Page<CozinhaModel> listar(@PageableDefault(size=10) Pageable pageable) {
 
        Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
@@ -53,7 +54,7 @@ public class CozinhaController {
        return cozinhaModelsPage;
     }
 
-    @GetMapping("/{cozinhaId}")
+    @GetMapping(path = "/{cozinhaId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CozinhaModel buscar(@PathVariable Long cozinhaId) {
 
         Cozinha cozinha = cadastroCozinhaService.buscarOuFalhar(cozinhaId);
@@ -61,7 +62,7 @@ public class CozinhaController {
         return cozinhaModelAssembler.toModel(cozinha);
     }
 
-    @PostMapping()
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public CozinhaModel adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {
             Cozinha cozinha = cozinhaInputDisassembler.toDomainObject(cozinhaInput);
@@ -70,7 +71,7 @@ public class CozinhaController {
             return cozinhaModelAssembler.toModel(cozinha);
     }
 
-    @PutMapping("/{cozinhaId}")
+    @PutMapping(path = "/{cozinhaId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CozinhaModel atualizar(@PathVariable Long cozinhaId, @Valid @RequestBody CozinhaInput cozinhaInput) {
             Cozinha cozinhaAtual = cadastroCozinhaService.buscarOuFalhar(cozinhaId);
             cozinhaInputDisassembler.copyToDomainObject(cozinhaInput, cozinhaAtual);
