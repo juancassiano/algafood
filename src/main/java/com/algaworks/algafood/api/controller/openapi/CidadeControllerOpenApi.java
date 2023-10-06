@@ -13,7 +13,6 @@ import java.util.List;
 public interface CidadeControllerOpenApi {
 
     @ApiOperation("Lista as cidades")
-    @GetMapping
     public List<CidadeModel> listar();
 
     @ApiOperation("Busca uma cidade pelo ID")
