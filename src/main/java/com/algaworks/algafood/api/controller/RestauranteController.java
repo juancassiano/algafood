@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
@@ -53,7 +54,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
     private SmartValidator validator;
 
     @JsonView(RestauranteView.Resumo.class)
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<RestauranteModel> listar() {
         return restauranteModelAssembler.toCollectionModel(restauranteRepository.findAll());
     }
@@ -64,14 +65,14 @@ public class RestauranteController implements RestauranteControllerOpenApi {
         return listar();
     }
 
-    @GetMapping("/{restauranteId}")
+    @GetMapping(path = "/{restauranteId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public RestauranteModel buscar(@PathVariable Long restauranteId){
         Restaurante restaurante = cadastroRestauranteService.buscarOuFalhar(restauranteId);
 
         return restauranteModelAssembler.toModel(restaurante);
     }
 
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public RestauranteModel adicionar(@RequestBody @Valid RestauranteInput restauranteInput){
         try{
@@ -82,7 +83,7 @@ public class RestauranteController implements RestauranteControllerOpenApi {
         }
     }
 
-    @PutMapping("/{restauranteId}")
+    @PutMapping(path = "/{restauranteId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public RestauranteModel atualizar(@PathVariable Long restauranteId, @Valid @RequestBody RestauranteInput restauranteInput){
         Restaurante restauranteAtual = cadastroRestauranteService.buscarOuFalhar(restauranteId);
 

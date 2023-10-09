@@ -10,13 +10,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 @Api(tags = "Pedidos")
-public interface PedidoControllerOpenApi {
+ public interface PedidoControllerOpenApi {
     @ApiImplicitParams({
             @ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
                     name = "campos", paramType = "query", type = "string")
     })
     @ApiOperation("Pesquisa os pedidos")
-    public Page<PedidoResumoModel> pesquisar(Pageable pageable, PedidoFilter filtro);
+     Page<PedidoResumoModel> pesquisar(Pageable pageable, PedidoFilter filtro);
 
     @ApiImplicitParams({
             @ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
@@ -26,12 +26,12 @@ public interface PedidoControllerOpenApi {
     @ApiResponses({
             @ApiResponse(code = 404, message = "Pedido não encontrado", response = Problem.class)
     })
-    public PedidoModel buscar( String codigoPedido);
+     PedidoModel buscar( String codigoPedido);
 
     @ApiOperation("Registra um pedido")
     @ApiResponses({
             @ApiResponse(code = 201, message = "Pedido registrado"),
     })
-    public PedidoModel adicionar( PedidoInput pedidoInput);
+     PedidoModel adicionar( PedidoInput pedidoInput);
 
 }

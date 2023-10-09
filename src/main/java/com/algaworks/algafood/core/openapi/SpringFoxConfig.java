@@ -25,7 +25,6 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -73,6 +72,7 @@ public class SpringFoxConfig {
                         new Tag("Formas de pagamento", "Gerencia as formas de pagamento"),
                         new Tag("Pedidos", "Gerencia os pedidos"),
                         new Tag("Restaurantes", "Gerencia os restaurantes"),
+                        new Tag("Estados", "Gerencia os estados"),
                         new Tag("Cozinhas", "Gerencia as cozinhas"));
     }
 
