@@ -76,9 +76,11 @@ public class SpringFoxConfig {
                         Resource.class, File.class, InputStream.class, Sort.class)
                 .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
                 .alternateTypeRules(AlternateTypeRules.newRule(
-//                        typeResolver.resolve(Page.class, CozinhaModel.class),CozinhasModelOpenApi.class))
                                 typeResolver.resolve(Page.class, PedidoResumoModel.class),
                                 PedidosResumoModelOpenApi.class))
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(Page.class, CozinhaModel.class),
+                        CozinhasModelOpenApi.class))
                 .tags(new Tag("Cidades", "Gerencia as cidades"),
                         new Tag("Grupos", "Gerencia os grupos"),
                         new Tag("Formas de pagamento", "Gerencia as formas de pagamento"),
