@@ -7,7 +7,6 @@ import io.swagger.annotations.*;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @Api(tags = "Cidades")
  public interface CidadeControllerOpenApi {
