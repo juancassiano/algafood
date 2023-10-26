@@ -1,6 +1,5 @@
 package com.algaworks.algafood.api.model;
 
-import com.algaworks.algafood.api.model.input.CidadeResumoModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;

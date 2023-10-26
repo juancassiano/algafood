@@ -33,64 +33,65 @@ import java.util.Optional;
 public class CozinhaController implements CozinhaControllerOpenApi {
 
     @Autowired
+    private CozinhaRepository cozinhaRepository;
+
+    @Autowired
+    private CadastroCozinhaService cadastroCozinha;
+
+    @Autowired
     private CozinhaModelAssembler cozinhaModelAssembler;
 
     @Autowired
     private CozinhaInputDisassembler cozinhaInputDisassembler;
 
     @Autowired
-    private CozinhaRepository cozinhaRepository;
-
-    @Autowired
-    private CadastroCozinhaService cadastroCozinhaService;
-
-    @Autowired
     private PagedResourcesAssembler<Cozinha> pagedResourcesAssembler;
 
-
+    @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public PagedModel<CozinhaModel> listar(@PageableDefault(size=10) Pageable pageable) {
+    public PagedModel<CozinhaModel> listar(@PageableDefault(size = 10) Pageable pageable) {
+        Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
 
-       Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
+        PagedModel<CozinhaModel> cozinhasPagedModel = pagedResourcesAssembler
+                .toModel(cozinhasPage, cozinhaModelAssembler);
 
-       PagedModel<CozinhaModel> cozinhasPagedModel = pagedResourcesAssembler.toModel(cozinhasPage,
-               cozinhaModelAssembler);
-
-       return cozinhasPagedModel;
-
+        return cozinhasPagedModel;
     }
 
-    @GetMapping(path = "/{cozinhaId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Override
+    @GetMapping(value = "/{cozinhaId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CozinhaModel buscar(@PathVariable Long cozinhaId) {
-
-        Cozinha cozinha = cadastroCozinhaService.buscarOuFalhar(cozinhaId);
+        Cozinha cozinha = cadastroCozinha.buscarOuFalhar(cozinhaId);
 
         return cozinhaModelAssembler.toModel(cozinha);
     }
 
+    @Override
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public CozinhaModel adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {
-            Cozinha cozinha = cozinhaInputDisassembler.toDomainObject(cozinhaInput);
-            cozinha = cadastroCozinhaService.salvar(cozinha);
+        Cozinha cozinha = cozinhaInputDisassembler.toDomainObject(cozinhaInput);
+        cozinha = cadastroCozinha.salvar(cozinha);
 
-            return cozinhaModelAssembler.toModel(cozinha);
+        return cozinhaModelAssembler.toModel(cozinha);
     }
 
-    @PutMapping(path = "/{cozinhaId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public CozinhaModel atualizar(@PathVariable Long cozinhaId, @Valid @RequestBody CozinhaInput cozinhaInput) {
-            Cozinha cozinhaAtual = cadastroCozinhaService.buscarOuFalhar(cozinhaId);
-            cozinhaInputDisassembler.copyToDomainObject(cozinhaInput, cozinhaAtual);
-            cozinhaAtual = cadastroCozinhaService.salvar(cozinhaAtual);
+    @Override
+    @PutMapping(value = "/{cozinhaId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public CozinhaModel atualizar(@PathVariable Long cozinhaId,
+                                  @RequestBody @Valid CozinhaInput cozinhaInput) {
+        Cozinha cozinhaAtual = cadastroCozinha.buscarOuFalhar(cozinhaId);
+        cozinhaInputDisassembler.copyToDomainObject(cozinhaInput, cozinhaAtual);
+        cozinhaAtual = cadastroCozinha.salvar(cozinhaAtual);
 
-            return cozinhaModelAssembler.toModel(cozinhaAtual);
-
+        return cozinhaModelAssembler.toModel(cozinhaAtual);
     }
 
-
-    @DeleteMapping("/{cozinhaId}")
+    @Override
+    @DeleteMapping(value = "/{cozinhaId}", produces = {})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long cozinhaId) {
-               cadastroCozinhaService.excluir(cozinhaId);
+        cadastroCozinha.excluir(cozinhaId);
     }
+
 }
