@@ -37,6 +37,8 @@ public class CidadeModelAssembler extends RepresentationModelAssemblerSupport<Ci
                 .withSelfRel());
 
         return cidadeModel;
+
+
     }
 
     @Override
