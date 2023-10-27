@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.assembler;
 
+import com.algaworks.algafood.api.AlgaLinks;
 import com.algaworks.algafood.api.controller.CozinhaController;
 import com.algaworks.algafood.api.model.CozinhaModel;
 import com.algaworks.algafood.domain.model.Cozinha;
@@ -22,6 +23,8 @@ public class CozinhaModelAssembler extends RepresentationModelAssemblerSupport<C
     @Autowired
     private ModelMapper modelmapper;
 
+    @Autowired
+    private AlgaLinks algaLinks;
     @Override
     public CozinhaModel toModel(Cozinha cozinha){
         CozinhaModel cozinhaModel = createModelWithId(cozinha.getId(),cozinha);
