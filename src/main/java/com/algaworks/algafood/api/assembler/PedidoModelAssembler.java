@@ -31,9 +31,15 @@ public class PedidoModelAssembler
 
         pedidoModel.add(algalinks.linkToPedidos());
 
-        pedidoModel.add(algalinks.linkToConfirmacaoPedido(pedidoModel.getCodigo(), "confirmar"));
-        pedidoModel.add(algalinks.linkToCancelamentoPedido(pedidoModel.getCodigo(), "cancelar"));
-        pedidoModel.add(algalinks.linkToEntregaPedido(pedidoModel.getCodigo(), "entregar"));
+        if(pedido.podeSerConfirmado()){
+            pedidoModel.add(algalinks.linkToConfirmacaoPedido(pedidoModel.getCodigo(), "confirmar"));
+        }
+        if(pedido.podeSerCancelado()){
+            pedidoModel.add(algalinks.linkToCancelamentoPedido(pedidoModel.getCodigo(), "cancelar"));
+        }
+        if(pedido.podeSerEntregue()){
+            pedidoModel.add(algalinks.linkToEntregaPedido(pedidoModel.getCodigo(), "entregar"));
+        }
 
         pedidoModel.getRestaurante().add(algalinks.linkToRestaurante(pedido.getRestaurante().getId()));
 
