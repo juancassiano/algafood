@@ -204,8 +204,13 @@ public class AlgaLinks {
         return Link.of(UriTemplate.of(pedidosUrl,PAGINACAO_VARIABLES.concat(filtroVariables)),rel);
     }
 
-    public Link restauranteFormaPagamentoDesassociacao(Long restauranteId, Long formaPagamentoId, String rel){
+    public Link linkToRestauranteFormaPagamentoDesassociacao(Long restauranteId, Long formaPagamentoId, String rel){
         return linkTo(methodOn(RestauranteFormaPagamentoController.class).desassociar(restauranteId,formaPagamentoId))
+                .withRel(rel);
+    }
+
+    public Link linkToRestauranteFormaPagamentoAssociacao(Long restauranteId, String rel){
+        return linkTo(methodOn(RestauranteFormaPagamentoController.class).associar(restauranteId, null))
                 .withRel(rel);
     }
 }
