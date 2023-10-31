@@ -203,4 +203,9 @@ public class AlgaLinks {
 
         return Link.of(UriTemplate.of(pedidosUrl,PAGINACAO_VARIABLES.concat(filtroVariables)),rel);
     }
+
+    public Link restauranteFormaPagamentoDesassociacao(Long restauranteId, Long formaPagamentoId, String rel){
+        return linkTo(methodOn(RestauranteFormaPagamentoController.class).desassociar(restauranteId,formaPagamentoId))
+                .withRel(rel);
+    }
 }
