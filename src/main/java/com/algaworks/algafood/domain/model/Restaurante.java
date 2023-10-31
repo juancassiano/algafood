@@ -44,7 +44,7 @@ public class Restaurante {
 
     private Boolean ativo = Boolean.TRUE;
 
-    private Boolean aberto = Boolean.TRUE;
+    private Boolean aberto = Boolean.FALSE;
 
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
@@ -66,15 +66,54 @@ public class Restaurante {
 
     @ManyToMany
     @JoinTable(name = "restaurante_usuario_responsavel",
-    joinColumns = @JoinColumn(name = "restaurante_id"),
-    inverseJoinColumns = @JoinColumn(name = "usuario_id"))
+            joinColumns = @JoinColumn(name = "restaurante_id"),
+            inverseJoinColumns = @JoinColumn(name = "usuario_id"))
     private Set<Usuario> responsaveis = new HashSet<>();
 
-    public void ativar(){
+    public void ativar() {
         setAtivo(true);
     }
-    public void inativar(){
+
+    public void inativar() {
         setAtivo(false);
+    }
+
+
+    public void abrir() {
+        setAberto(true);
+    }
+
+    public void fechar() {
+        setAberto(false);
+    }
+
+    public boolean isAberto() {
+        return this.aberto;
+    }
+
+    public boolean isFechado() {
+        return !isAberto();
+    }
+
+    public boolean isAtivo(){
+        return this.ativo;
+    }
+
+    public boolean isInativo(){
+        return !isAtivo();
+    }
+
+    public boolean aberturaPermitida(){
+        return isAtivo() && isFechado();
+    }
+    public boolean ativacaoPermitida(){
+        return isInativo();
+    }
+    public boolean inativacaoPermitida(){
+        return isAtivo();
+    }
+    public boolean fechamentoPermitido(){
+        return isAberto();
     }
 
     public boolean desassociarFormaPagamento(FormaPagamento formaPagamento){
@@ -85,12 +124,6 @@ public class Restaurante {
         return getFormasPagamento().add(formaPagamento);
     }
 
-    public void abrir() {
-        setAberto(true);
-    }
-    public void fechar(){
-        setAberto(false);
-    }
 
     public boolean aceitaFormaPagamento(FormaPagamento formaPagamento){
         return getFormasPagamento().contains(formaPagamento);
@@ -107,4 +140,6 @@ public class Restaurante {
     public boolean adicionarResponavel(Usuario usuario){
         return getResponsaveis().add(usuario);
     }
+
+
 }
