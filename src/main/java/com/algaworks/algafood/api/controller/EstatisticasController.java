@@ -1,12 +1,14 @@
 package com.algaworks.algafood.api.controller;
 
 
+import com.algaworks.algafood.api.AlgaLinks;
 import com.algaworks.algafood.api.openapi.controller.EstatisticasControllerOpenApi;
 import com.algaworks.algafood.domain.filter.VendaDiariaFilter;
 import com.algaworks.algafood.domain.model.dto.VendaDiaria;
 import com.algaworks.algafood.domain.service.VendaQueryService;
 import com.algaworks.algafood.domain.service.VendaReportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +27,24 @@ public class EstatisticasController implements EstatisticasControllerOpenApi {
     private VendaQueryService vendaQueryService;
 
     @Autowired
+    private AlgaLinks algaLinks;
+
+    @Autowired
     private VendaReportService vendaReportService;
 
     @GetMapping(path= "/vendas-diarias", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<VendaDiaria> consultarVendasDiarias(VendaDiariaFilter filtro,@RequestParam(required = false, defaultValue = "+00:00") String timeOffset){
 
         return vendaQueryService.consultarVendasDiarias(filtro, timeOffset);
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public EstatisticasModel estatisticas(){
+        EstatisticasModel estatisticasModel = new EstatisticasModel();
+
+        estatisticasModel.add(algaLinks.linkToEstatisticasVendasDiarias("vendas-diaras"));
+
+        return estatisticasModel;
     }
 
     @GetMapping(path= "/vendas-diarias", produces = MediaType.APPLICATION_PDF_VALUE)
@@ -43,5 +57,10 @@ public class EstatisticasController implements EstatisticasControllerOpenApi {
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
                 .headers(headers)
                 .body(bytesPdf);
+    }
+
+
+
+    public static class EstatisticasModel extends RepresentationModel<EstatisticasModel> {
     }
 }
