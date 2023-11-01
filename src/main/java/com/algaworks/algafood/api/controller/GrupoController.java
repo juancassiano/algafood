@@ -9,6 +9,7 @@ import com.algaworks.algafood.domain.model.Grupo;
 import com.algaworks.algafood.domain.repository.GrupoRepository;
 import com.algaworks.algafood.domain.service.CadastroGrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class GrupoController implements GrupoControllerOpenApi {
     private GrupoInputDisassembler grupoInputDisassembler;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<GrupoModel>listar(){
+    public CollectionModel<GrupoModel> listar(){
         List<Grupo> todosGrupos = grupoRepository.findAll();
 
         return grupoModelAssembler.toCollectionModel(todosGrupos);
