@@ -3,6 +3,8 @@ package com.algaworks.algafood.api.openapi.controller;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.algaworks.algafood.api.model.PermissaoModel;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -14,7 +16,7 @@ public interface GrupoPermissaoControllerOpenApi {
             @ApiResponse(code = 400, message = "ID do grupo inválido", response = Problem.class),
             @ApiResponse(code = 404, message = "ID do grupo não encontrado", response = Problem.class)
     })
-    List<PermissaoModel> listar( @ApiParam(value = "ID do grupo", example = "1", required = true)
+    CollectionModel<PermissaoModel> listar(@ApiParam(value = "ID do grupo", example = "1", required = true)
                                  Long grupoId);
 
     @ApiOperation("Dessassocia permissão de um grupo")
@@ -22,9 +24,9 @@ public interface GrupoPermissaoControllerOpenApi {
             @ApiResponse(code = 204, message = "Dessassociação realizada com sucesso", response = Problem.class),
             @ApiResponse(code = 404, message = "Grupo ou Permissão não encontrado", response = Problem.class)
     })
-    void desassociar(@ApiParam(value = "ID do grupo", example = "1", required = true)
+    ResponseEntity<Void> desassociar(@ApiParam(value = "ID do grupo", example = "1", required = true)
                      Long grupoId,
-                     @ApiParam(value = "ID da permissão", example = "1", required = true)
+                               @ApiParam(value = "ID da permissão", example = "1", required = true)
                      Long permissaoId);
 
 
@@ -33,7 +35,7 @@ public interface GrupoPermissaoControllerOpenApi {
             @ApiResponse(code = 204, message = "Associação realizada com sucesso", response = Problem.class),
             @ApiResponse(code = 404, message = "Grupo ou Permissão não encontrado", response = Problem.class)
     })
-    void associar( @ApiParam(value = "ID do grupo", example = "1", required = true)
+    ResponseEntity<Void> associar( @ApiParam(value = "ID do grupo", example = "1", required = true)
                    Long grupoId,
                    @ApiParam(value = "ID da permissão", example = "1", required = true)
                    Long permissaoId);
