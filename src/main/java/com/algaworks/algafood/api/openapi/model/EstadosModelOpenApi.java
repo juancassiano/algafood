@@ -1,6 +1,5 @@
 package com.algaworks.algafood.api.openapi.model;
 
-import com.algaworks.algafood.api.model.CozinhaModel;
 import com.algaworks.algafood.api.model.EstadoModel;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
