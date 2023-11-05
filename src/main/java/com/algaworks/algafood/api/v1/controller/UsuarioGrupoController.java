@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/usuarios/{usuarioId}/grupos")
+@RequestMapping("/v1/usuarios/{usuarioId}/grupos")
 public class UsuarioGrupoController implements UsuarioGrupoControllerOpenApi {
 
     @Autowired
