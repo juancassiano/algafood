@@ -36,7 +36,6 @@ public class CidadeModelAssemblerV2 extends RepresentationModelAssemblerSupport<
                 .listar())
                 .withRel("cidades"));
 
-
         return cidadeModel;
 
 
