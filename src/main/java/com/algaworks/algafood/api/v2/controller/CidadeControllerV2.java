@@ -15,13 +15,14 @@ import com.algaworks.algafood.domain.service.CadastroCidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cidades")
+@RequestMapping("/v2/cidades")
 public class CidadeControllerV2 {
 
     @Autowired
@@ -37,7 +38,7 @@ public class CidadeControllerV2 {
     @Autowired
     private CadastroCidadeService cadastroCidadeService;
 
-    @GetMapping(produces = AlgaMediaTypes.V2_APPLICATION_JSON_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public CollectionModel<CidadeModelV2> listar(){
         List<Cidade> todasCidades = cidadeRepository.findAll();
 
@@ -45,7 +46,7 @@ public class CidadeControllerV2 {
 //        cidadesCollectionModel.add(linkTo(CidadeController.class).withSelfRel());
     }
 
-    @GetMapping(path = "/{cidadeId}", produces = AlgaMediaTypes.V2_APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{cidadeId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CidadeModelV2 buscar(@PathVariable Long cidadeId){
 
         Cidade cidade =  cadastroCidadeService.buscarOuFalhar(cidadeId);
@@ -54,7 +55,8 @@ public class CidadeControllerV2 {
 
     }
 
-    @PostMapping(produces = AlgaMediaTypes.V2_APPLICATION_JSON_VALUE)
+//    @PostMapping(produces = AlgaMediaTypes.V2_APPLICATION_JSON_VALUE)
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public CidadeModelV2 adicionar(@RequestBody @Valid CidadeInputV2 cidadeInput){
 
@@ -91,11 +93,10 @@ public class CidadeControllerV2 {
 
     }
 
-    //  Não pode ser mapeado na mesma URL em um MediaType diferente, já que não aceita entrada e retorna void.
-//    @DeleteMapping("/{cidadeId}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void remover(@PathVariable Long cidadeId) {
-//        cadastroCidadeService.excluir(cidadeId);
-//    }
+    @DeleteMapping("/{cidadeId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long cidadeId) {
+        cadastroCidadeService.excluir(cidadeId);
+    }
 
 }
