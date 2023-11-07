@@ -8,7 +8,7 @@ import java.util.List;
 
 @ApiModel("ProdutosModel")
 @Data
-public class ProdutoModelOpenApi {
+public class ProdutosModelOpenApi {
 
     private ProdutosEmbeddedModelOpenApi _embedded;
     private Links _links;
