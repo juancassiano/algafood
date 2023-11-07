@@ -133,12 +133,14 @@ public class SpringFoxConfig {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.algaworks.algafood.api"))
                 .paths(PathSelectors.ant("/v2/**"))
+
                 .build()
                 .useDefaultResponseMessages(false)
                 .globalResponses(HttpMethod.GET, globalGetResponseMessages())
                 .globalResponses(HttpMethod.POST, globalPostPutResponseMessages())
                 .globalResponses(HttpMethod.PUT, globalPostPutResponseMessages())
                 .globalResponses(HttpMethod.DELETE, globalDeleteResponseMessages())
+                .apiInfo(apiInfoV2())
                 .additionalModels(typeResolver.resolve(Problem.class))
                 .ignoredParameterTypes(ServletWebRequest.class,
                         URL.class, URI.class, URLStreamHandler.class, Resource.class,
@@ -153,9 +155,6 @@ public class SpringFoxConfig {
                 .alternateTypeRules(AlternateTypeRules.newRule(
                         typeResolver.resolve(CollectionModel.class, CidadeModelV2.class),
                         CidadesModelV2OpenApi.class))
-
-                .apiInfo(apiInfoV2())
-
                 .tags(new Tag("Cidades", "Gerencia as cidades"),
                         new Tag("Cozinhas", "Gerencia as cozinhas"));
     }
@@ -163,8 +162,9 @@ public class SpringFoxConfig {
 
     public ApiInfo apiInfoV1(){
         return new ApiInfoBuilder()
-                .title("Algafood API")
-                .description("API aberta para clientes e restaurantes")
+                .title("Algafood API (depreciada")
+                .description("API aberta para clientes e restaurantes<br>" +
+                        "<strong>Essa versão da API está depreciada e deixará de existir a partir de XX/XX/XXXX</strong>")
                 .version("1")
                 .contact(new Contact("Juan Cassiano", "https://github.com/juancassiano", "juancassiano@hotmail.com"))
                 .build();
