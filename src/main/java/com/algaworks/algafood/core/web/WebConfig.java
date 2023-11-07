@@ -16,6 +16,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Autowired
     private ApiDeprecationHandler apiDeprecationHandler;
+    @Autowired
+    private ApiRetirementHandler apiRetirementHandler;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -39,4 +41,10 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(apiDeprecationHandler);
     }
+
+
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(apiRetirementHandler);
+//    }
 }
