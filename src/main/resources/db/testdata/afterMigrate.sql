@@ -83,13 +83,14 @@ insert into grupo (id, nome) values (1, 'Gerente'), (2, 'Vendedor'), (3, 'Secret
 insert into grupo_permissao (grupo_id, permissao_id) values (1, 1), (1, 2), (2, 1), (2, 2), (3, 1);
 
 insert into usuario (id, nome, email, senha, data_cadastro) values
-(1, 'João da Silva', 'juancassiano@hotmail.com', '123', utc_timestamp),
-(2, 'Maria Joaquina', 'juancassiano@hotmail.com', '123', utc_timestamp),
-(3, 'José Souza', 'juancassiano@hotmail.com', '123', utc_timestamp),
-(4, 'Sebastião Martins', 'juancassiano@hotmail.com', '123', utc_timestamp),
-(5, 'Manoel Lima', 'juancassiano@hotmail.com', '123', utc_timestamp),
-(6, 'Débora Mendonça', 'juancassiano@hotmail.com', '123', utc_timestamp),
-(7, 'Carlos Lima', 'juancassiano@hotmail.com', '123', utc_timestamp);
+(1, 'João da Silva', 'joaodasilva@algafood.com', '123', utc_timestamp),
+(2, 'Maria Joaquina', 'mariajoaquina@algafood.com', '123', utc_timestamp),
+(3, 'José Souza', 'josesouza@algafood.com', '123', utc_timestamp),
+(4, 'Sebastião Martins', 'sebastiaomartins@algafood.com', '123', utc_timestamp),
+(5, 'Manoel Lima', 'manoellima@algafood.com', '123', utc_timestamp),
+(6, 'Débora Mendonça', 'deboramendonca@algafood.com', '123', utc_timestamp),
+(7, 'Carlos Lima', 'carloslima@algafood.com', '123', utc_timestamp);
+(7, 'Juan Cassiano', 'juancassiano@hotmail.com', '123', utc_timestamp);
 
 insert into usuario_grupo (usuario_id, grupo_id) values (1, 1), (1, 2), (2, 2);
 
