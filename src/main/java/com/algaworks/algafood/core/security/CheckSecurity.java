@@ -9,12 +9,12 @@ import java.lang.annotation.Target;
 
 public @interface CheckSecurity {
     public @interface Cozinhas{
-        @PreAuthorize("hasAuthority('EDITAR_COZINHAS')")
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDITAR_COZINHAS')")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
         public @interface PodeEditar {}
 
-        @PreAuthorize("isAuthenticated()")
+        @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
         @Retention(RetentionPolicy.RUNTIME)
         @Target(ElementType.METHOD)
         public @interface PodeConsultar {}
