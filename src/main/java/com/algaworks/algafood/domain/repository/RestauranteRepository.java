@@ -15,7 +15,7 @@ public interface RestauranteRepository extends
         CustomJpaRepository<Restaurante, Long>, RestauranteRepositoryQueries, JpaSpecificationExecutor<Restaurante> {
 
     @Query("from Restaurante r join r.cozinha left join r.formasPagamento")
-    List<Restaurante> findall();
+    List<Restaurante> findAll();
 
     List<Restaurante> findByTaxaFreteBetween(BigDecimal taxaInicial, BigDecimal taxaFinal);
 
@@ -26,4 +26,6 @@ public interface RestauranteRepository extends
     Optional<Restaurante> findFirstRestauranteByNomeContaining(String nome);
 
     List<Restaurante> findTop2ByNomeContaining(String nome);
+
+    boolean existsResponsavel(Long restauranteId, Long usuarioId);
 }
