@@ -58,6 +58,7 @@ public class PedidoController implements PedidoControllerOpenApi {
     @Autowired
     private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
 
+    @CheckSecurity.Pedidos.PodePesquisar
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public PagedModel<PedidoResumoModel> pesquisar(@PageableDefault(size = 10) Pageable pageable, PedidoFilter filtro){
         Pageable pageableTraduzido = traduzirPageable(pageable);

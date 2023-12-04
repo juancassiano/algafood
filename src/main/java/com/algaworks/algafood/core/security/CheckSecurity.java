@@ -53,5 +53,24 @@ public @interface CheckSecurity {
         @Target(METHOD)
         public @interface PodeBuscar { }
 
+
+        @PreAuthorize("hasAuthority('SCOPE_READ') and (hasAuthority('CONSULTAR_PEDIDOS') or" +
+                "@algaSecurity.getUsuarioId() == #filtro.clienteId or" +
+                "@algaSecurity.gerenciaRestaurante(#filtro.restauranteId))")
+        @Retention(RUNTIME)
+        @Target(METHOD)
+        public @interface PodePesquisar{}
+
+
+        @PreAuthorize("hasAuthority('SCORE_WRITE') and isAuthenticated()")
+        @Retention(RUNTIME)
+        @Target(METHOD)
+        public @interface PodeCriar{}
+
+        @PreAuthorize("hasAuthority('SCORE_WRITE)and (hasAuthority('GERENCIAR_PEDIDOS') or" +
+                "@algaSecurity.gerenciaRestauranteDoPedido(#codigoPedido))")
+        @Retention(RUNTIME)
+        @Target(METHOD)
+        public @interface PodeGerenciarPedidos{}
     }
 }
