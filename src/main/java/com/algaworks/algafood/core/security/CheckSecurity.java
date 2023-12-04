@@ -62,15 +62,29 @@ public @interface CheckSecurity {
         public @interface PodePesquisar{}
 
 
-        @PreAuthorize("hasAuthority('SCORE_WRITE') and isAuthenticated()")
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and isAuthenticated()")
         @Retention(RUNTIME)
         @Target(METHOD)
         public @interface PodeCriar{}
 
-        @PreAuthorize("hasAuthority('SCORE_WRITE)and (hasAuthority('GERENCIAR_PEDIDOS') or" +
+        @PreAuthorize("hasAuthority('SCOPE_WRITE)and (hasAuthority('GERENCIAR_PEDIDOS') or" +
                 "@algaSecurity.gerenciaRestauranteDoPedido(#codigoPedido))")
         @Retention(RUNTIME)
         @Target(METHOD)
         public @interface PodeGerenciarPedidos{}
+    }
+
+    public @interface FormasPagamento{
+
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDITAR_FORMAS_PAGAMENTO')")
+        @Retention(RUNTIME)
+        @Target(METHOD)
+        public @interface PodeEditar{}
+
+        @PreAuthorize("hasAuthority('SCOPE_READ') and isAuthenticated()")
+        @Retention(RUNTIME)
+        @Target(METHOD)
+        public @interface PodeConsultar{}
+
     }
 }
