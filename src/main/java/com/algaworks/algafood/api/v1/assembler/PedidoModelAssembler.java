@@ -30,7 +30,9 @@ public class PedidoModelAssembler
         PedidoModel pedidoModel = createModelWithId(pedido.getCodigo(), pedido);
         modelMapper.map(pedido, pedidoModel);
 
-        pedidoModel.add(algalinks.linkToPedidos());
+        if(algaSecurity.podePesquisarPedidos()){
+            pedidoModel.add(algalinks.linkToPedidos());
+        }
 
         if(algaSecurity.podeGerenciarPedidos(pedido.getCodigo())){
             if(pedido.podeSerConfirmado()){
@@ -44,18 +46,29 @@ public class PedidoModelAssembler
             }
         }
 
-        pedidoModel.getRestaurante().add(algalinks.linkToRestaurante(pedido.getRestaurante().getId()));
+        if(algaSecurity.podeConsultarRestaurantes()){
+            pedidoModel.getRestaurante().add(algalinks.linkToRestaurante(pedido.getRestaurante().getId()));
+        }
 
-        pedidoModel.getCliente().add(algalinks.linkToUsuario(pedido.getCliente().getId()));
+        if(algaSecurity.podeConsultarUsuariosGruposPermissoes()){
+            pedidoModel.getCliente().add(algalinks.linkToUsuario(pedido.getCliente().getId()));
 
-        pedidoModel.getFormaPagamento().add(algalinks.linkToFormaPagamento(pedido.getFormaPagamento().getId()));
+        }
 
-        pedidoModel.getEnderecoEntrega().getCidade().add(algalinks.linkToCidade(pedido.getEnderecoEntrega()
-                .getCidade().getId()));
+        if(algaSecurity.podeConsultarFormasPagamento()){
+            pedidoModel.getFormaPagamento().add(algalinks.linkToFormaPagamento(pedido.getFormaPagamento().getId()));
+        }
 
-        pedidoModel.getItens().forEach(item -> {
-            item.add(algalinks.linkToProduto(pedidoModel.getRestaurante().getId(),item.getProdutoId(),"produto"));
-        });
+        if(algaSecurity.podeConsultarCidades()){
+            pedidoModel.getEnderecoEntrega().getCidade().add(algalinks.linkToCidade(pedido.getEnderecoEntrega()
+                    .getCidade().getId()));
+        }
+
+        if(algaSecurity.podeConsultarRestaurantes()){
+            pedidoModel.getItens().forEach(item -> {
+                item.add(algalinks.linkToProduto(pedidoModel.getRestaurante().getId(),item.getProdutoId(),"produto"));
+            });
+        }
 
         return pedidoModel;
     }
