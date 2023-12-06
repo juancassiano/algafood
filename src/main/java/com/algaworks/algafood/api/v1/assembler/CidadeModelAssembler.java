@@ -31,7 +31,6 @@ public class CidadeModelAssembler extends RepresentationModelAssemblerSupport<Ci
 
     @Override
     public CidadeModel toModel(Cidade cidade){
-
         CidadeModel cidadeModel = createModelWithId(cidade.getId(),cidade);
         modelMapper.map(cidade, cidadeModel);
 

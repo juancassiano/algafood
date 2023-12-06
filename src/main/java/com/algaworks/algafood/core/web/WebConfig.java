@@ -19,13 +19,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private ApiRetirementHandler apiRetirementHandler;
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedMethods("*");
-//                .maxAge(30);
-    }
-
 //    @Override
 //    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
 //        configurer.defaultContentType(AlgaMediaTypes.V2_APPLICATION_JSON);
