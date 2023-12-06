@@ -43,17 +43,18 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers(HttpMethod.GET, "/v1/cozinhas/**").authenticated()
 //                .anyRequest().denyAll()
 //                .and()
-                .formLogin()
+                .formLogin().loginPage("/login")
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/oauth/**").authenticated()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/oauth/**").authenticated()
                 .and()
                 .csrf().disable()
                     .cors()
                 .and()
                     .oauth2ResourceServer()
                     .jwt()
-                .jwtAuthenticationConverter(jwtAuthenticationConverter())
+                    .jwtAuthenticationConverter(jwtAuthenticationConverter())
         ;
     }
 
