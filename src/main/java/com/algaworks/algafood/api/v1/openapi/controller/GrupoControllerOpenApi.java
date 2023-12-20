@@ -3,41 +3,51 @@ package com.algaworks.algafood.api.v1.openapi.controller;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.algaworks.algafood.api.v1.model.GrupoModel;
 import com.algaworks.algafood.api.v1.model.input.GrupoInput;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-@Api(tags = "Grupos")
+@SecurityRequirement(name = "security_auth")
+@Tag(name = "Grupos")
  public interface GrupoControllerOpenApi {
+    @Operation(summary = "Busca um grupo pelo ID", responses = {
+            @ApiResponse(responseCode = "200"),
+            @ApiResponse(responseCode = "400", description = "ID do grupo inválido", content = @Content(schema = @Schema(ref = "Problema"))),
+            @ApiResponse(responseCode = "404", description = "Grupo não encontrado", content = @Content(schema = @Schema(ref = "Problema")))
+    })
+    GrupoModel buscar(@Parameter(description = "ID do grupo")Long grupoId);
 
-    @ApiOperation("Lista os grupos")
+
+    @Operation(summary = "Lista os grupos")
     CollectionModel<GrupoModel> listar();
 
-    @ApiOperation("Busca um grupo pelo ID")
-    @ApiResponses({
-            @ApiResponse(code = 400, message = "ID do grupo inválido", response = Problem.class),
-            @ApiResponse(code = 404, message = "Grupo não encontrado", response = Problem.class)
-    })
-     GrupoModel buscar(@ApiParam(value = "ID do grupo")Long grupoId);
+    @Operation(summary = "Cadastra um grupo", responses = {
+            @ApiResponse(responseCode = "201", description = "Grupo cadastrado"),
 
-    @ApiOperation("Cadastra um grupo")
-    @ApiResponses({
-            @ApiResponse(code = 201, message = "Grupo cadastrado"),
     })
-     GrupoModel adicionar(@ApiParam(name = "corpo", value = "Representação de um novo Grupo") GrupoInput grupoInput);
+     GrupoModel adicionar(@RequestBody(description = "Representação de um novo Grupo") GrupoInput grupoInput);
 
-    @ApiOperation("Atualiza um grupo pelo ID")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Grupo atualizado", response = Problem.class),
-            @ApiResponse(code = 404, message = "Grupo não encontrado", response = Problem.class)
+    @Operation(summary = "Atualiza um grupo pelo ID", responses = {
+            @ApiResponse(responseCode = "200"),
+            @ApiResponse(responseCode = "400", description = "ID do grupo inválido", content = @Content(schema = @Schema(ref = "Problema"))),
+            @ApiResponse(responseCode = "404", description = "Grupo não encontrado", content = @Content(schema = @Schema(ref = "Problema")))
     })
-     GrupoModel atualizar(@ApiParam(value = "ID do grupo") Long grupoId,
-                                @ApiParam(name = "corpo", value = "Representação de um novo Grupo")
+     GrupoModel atualizar(@Parameter(description = "ID do grupo") Long grupoId,
+                                @RequestBody(description = "Representação de um novo Grupo")
                                 GrupoInput grupoInput);
-    @ApiOperation("Deleta um grupo pelo ID")
-    @ApiResponses({
-            @ApiResponse(code = 204, message = "Grupo excluído", response = Problem.class),
-            @ApiResponse(code = 404, message = "Grupo não encontrado", response = Problem.class)
+    @Operation(summary = "Deleta um grupo pelo ID", responses = {
+            @ApiResponse(responseCode = "204"),
+            @ApiResponse(responseCode = "400", description = "ID do grupo inválido", content = @Content(schema = @Schema(ref = "Problema"))),
+            @ApiResponse(responseCode = "404", description = "Grupo não encontrado", content = @Content(schema = @Schema(ref = "Problema")))
+
     })
-     void remove(@ApiParam(value = "ID do grupo") Long grupoId);
+     void remove(@Parameter(description = "ID do grupo") Long grupoId);
 
 }

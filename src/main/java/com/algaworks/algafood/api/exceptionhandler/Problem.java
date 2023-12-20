@@ -1,41 +1,40 @@
 package com.algaworks.algafood.api.exceptionhandler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 
-@ApiModel("Problema")
+@Schema(name = "Problema")
 @Getter
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Problem {
-    @ApiModelProperty(example = "400",position = 1)
+    @Schema(example = "400")
     private Integer status;
-    @ApiModelProperty(example = "https://algafood.com.br/erro-negocio",position = 10)
+    @Schema(example = "https://algafood.com.br/erro-negocio")
     private String type;
-    @ApiModelProperty(example = "Violação de regra de negócio",position = 20)
+    @Schema(example = "Violação de regra de negócio")
     private String title;
-    @ApiModelProperty(example = "Não existe um cadastro de estado com codigo 1",position = 30)
+    @Schema(example = "Não existe um cadastro de estado com codigo 1")
     private String detail;
-    @ApiModelProperty(example = "Não existe um cadastro de estado com codigo 1",position = 35)
+    @Schema(example = "Não existe um cadastro de estado com codigo 1")
     private String userMessage;
-    @ApiModelProperty(example = "2021-11-14T00:12:13",position = 40)
+    @Schema(example = "2021-11-14T00:12:13")
     private OffsetDateTime timestamp;
-    @ApiModelProperty(value="Objetos ou campos que geraram o erro",position = 50)
+    @Schema(description="Objetos ou campos que geraram o erro")
     private List<Object> objects;
 
-    @ApiModel("ObjetoProblema")
+    @Schema(name = "ObjetoProblema")
     @Getter
     @Builder
     public static class Object {
-        @ApiModelProperty(example = "Estado")
+        @Schema(example = "Estado")
         private String name;
-        @ApiModelProperty(example = "Estado não encontrado")
+        @Schema(example = "Estado não encontrado")
         private String userMessage;
     }
 }

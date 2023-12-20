@@ -1,7 +1,6 @@
 package com.algaworks.algafood.api.v2.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
@@ -12,13 +11,13 @@ import org.springframework.hateoas.server.core.Relation;
 @Setter
 public class CidadeModelV2 extends RepresentationModel<CidadeModelV2> {
 
-    @ApiModelProperty(value = "ID da cidade", example = "1")
+    @Schema(description = "ID da cidade", example = "1")
     private Long idCidade;
-    @ApiModelProperty(example = "Rio de Janeiro")
+    @Schema(example = "Rio de Janeiro")
     private String nomeCidade;
 
-    @ApiModelProperty(value = "ID do Estado", example = "1")
+    @Schema(description = "ID do Estado", example = "1")
     private Long idEstado;
-    @ApiModelProperty(example = "RJ")
+    @Schema(example = "RJ")
     private String nomeEstado;
 }

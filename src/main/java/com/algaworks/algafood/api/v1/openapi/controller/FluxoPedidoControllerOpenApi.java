@@ -1,31 +1,35 @@
 package com.algaworks.algafood.api.v1.openapi.controller;
 
-import com.algaworks.algafood.api.exceptionhandler.Problem;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 
-@Api(tags = "Pedidos")
+@SecurityRequirement(name = "security_auth")
 public interface FluxoPedidoControllerOpenApi {
 
-    @ApiOperation("Confirmar Pedido")
-    @ApiResponses({
-            @ApiResponse(code = 204, message = "Pedido confirmado com sucesso"),
-            @ApiResponse(code = 404, message = "Pedido não encontrado", response = Problem.class)
-    })
-    ResponseEntity<Void> confirmar(@ApiParam(value = "Código do pedido", example = "7507075d-b84f-4362-ba30-b39f2835f49f", required = true) String codigoPedido);
+    @Operation(summary = "Confirmar Pedido", responses = {
+            @ApiResponse(responseCode = "204", description = "Pedido confirmado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Pedido não encontrado", content = @Content(schema = @Schema(ref = "Problema")))
 
-    @ApiOperation("Cancelar Pedido")
-    @ApiResponses({
-            @ApiResponse(code = 204, message = "Pedido cancelado com sucesso"),
-            @ApiResponse(code = 404, message = "Pedido não encontrado", response = Problem.class)
     })
-    ResponseEntity<Void> cancelar(@ApiParam(value = "Código do pedido", example = "7507075d-b84f-4362-ba30-b39f2835f49f", required = true) String codigoPedido);
+    ResponseEntity<Void> confirmar(@Parameter(description = "Código do pedido", example = "7507075d-b84f-4362-ba30-b39f2835f49f", required = true) String codigoPedido);
 
-    @ApiOperation("Entregar Pedido")
-    @ApiResponses({
-            @ApiResponse(code = 204, message = "Pedido entregue com sucesso"),
-            @ApiResponse(code = 404, message = "Pedido não encontrado", response = Problem.class)
+    @Operation(summary = "Cancelar Pedido", responses = {
+            @ApiResponse(responseCode = "204", description = "Pedido cancelado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Pedido não encontrado", content = @Content(schema = @Schema(ref = "Problema")))
+
     })
-    ResponseEntity<Void> entregar(@ApiParam(value = "Código do pedido", example = "7507075d-b84f-4362-ba30-b39f2835f49f", required = true) String codigoPedido);
+    ResponseEntity<Void> cancelar(@Parameter(description = "Código do pedido", example = "7507075d-b84f-4362-ba30-b39f2835f49f", required = true) String codigoPedido);
+
+    @Operation(summary = "Entregar Pedido", responses = {
+            @ApiResponse(responseCode = "204", description = "Pedido entregue com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Pedido não encontrado", content = @Content(schema = @Schema(ref = "Problema")))
+
+    })
+    ResponseEntity<Void> entregar(@Parameter(description = "Código do pedido", example = "7507075d-b84f-4362-ba30-b39f2835f49f", required = true) String codigoPedido);
 
 }

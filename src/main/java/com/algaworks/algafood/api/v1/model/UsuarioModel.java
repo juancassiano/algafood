@@ -1,6 +1,6 @@
 package com.algaworks.algafood.api.v1.model;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
@@ -10,12 +10,12 @@ import org.springframework.hateoas.server.core.Relation;
 @Getter
 @Setter
 public class UsuarioModel extends RepresentationModel<UsuarioModel> {
-    @ApiModelProperty(example = "1")
+    @Schema(example = "1")
     private Long id;
 
-    @ApiModelProperty(example = "Juan Cassiano")
+    @Schema(example = "Juan Cassiano")
     private String nome;
 
-    @ApiModelProperty(example = "juancassiano@hotmail.com")
+    @Schema(example = "juancassiano@hotmail.com")
     private String email;
 }

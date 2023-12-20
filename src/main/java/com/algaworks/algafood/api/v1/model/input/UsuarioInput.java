@@ -1,6 +1,6 @@
 package com.algaworks.algafood.api.v1.model.input;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,11 +11,11 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class UsuarioInput {
 
-    @ApiModelProperty(example = "João da Silva", required = true)
+    @Schema(example = "João da Silva", required = true)
     @NotBlank
     private String nome;
 
-    @ApiModelProperty(example = "joao@gmail.com", required = true)
+    @Schema(example = "joao@gmail.com", required = true)
     @NotBlank
     @Email
     private String email;
