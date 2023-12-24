@@ -21,41 +21,44 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class AuthorizedClientsController {
+
     private final OAuth2AuthorizationQueryService oAuth2AuthorizationQueryService;
-    private final RegisteredClientRepository registeredClientRepository;
+    private final RegisteredClientRepository clientRepository;
     private final OAuth2AuthorizationConsentService oAuth2AuthorizationConsentService;
-    private final OAuth2AuthorizationService oAuth2AuthorizationService;
+    private final OAuth2AuthorizationService auth2AuthorizationService;
 
     @GetMapping("/oauth2/authorized-clients")
-    public String clientList(Principal principal, Model model){
+    public String clientList(Principal principal, Model model) {
         List<RegisteredClient> clients = oAuth2AuthorizationQueryService.listClientsWithConsent(principal.getName());
         model.addAttribute("clients", clients);
-
         return "pages/authorized-clients";
     }
 
     @PostMapping("/oauth2/authorized-clients/revoke")
-    public String revoke(Principal principal, Model model,
-                         @RequestParam(OAuth2ParameterNames.CLIENT_ID) String clientId){
+    public String revoke(Principal principal,
+                         Model model,
+                         @RequestParam(OAuth2ParameterNames.CLIENT_ID) String clientId) {
+        RegisteredClient registeredClient = this.clientRepository.findByClientId(clientId);
 
-        RegisteredClient registeredClient = this.registeredClientRepository.findById(clientId);
-
-        if(registeredClient == null){
+        if(registeredClient == null) {
             throw new AccessDeniedException(String.format("Cliente %s não encontrado", clientId));
         }
 
-        OAuth2AuthorizationConsent consent = this.oAuth2AuthorizationConsentService.findById(registeredClient.getId(), principal.getName());
+        OAuth2AuthorizationConsent conset = this.oAuth2AuthorizationConsentService.findById(registeredClient.getId(),
+                principal.getName());
 
-        List<OAuth2Authorization> authorizations = this.oAuth2AuthorizationQueryService.listAuthorization(principal.getName(), registeredClient.getId());
+        List<OAuth2Authorization> authorizations = this.oAuth2AuthorizationQueryService.listAuthorization(
+                principal.getName(), registeredClient.getId());
 
-        for (OAuth2Authorization authorization : authorizations) {
-            this.oAuth2AuthorizationService.remove(authorization);
+        if(conset != null) {
+            this.oAuth2AuthorizationConsentService.remove(conset);
         }
 
-        if(consent != null){
-            this.oAuth2AuthorizationConsentService.remove(consent);
+        for (OAuth2Authorization authorization : authorizations) {
+            this.auth2AuthorizationService.remove(authorization);
         }
 
         return "redirect:/oauth2/authorized-clients";
     }
+
 }

@@ -3,7 +3,7 @@ package com.algaworks.algafood.domain.model;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Data
 @Embeddable
