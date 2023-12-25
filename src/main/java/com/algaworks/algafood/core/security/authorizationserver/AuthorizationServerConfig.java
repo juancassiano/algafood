@@ -40,14 +40,16 @@ public class AuthorizationServerConfig {
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    public SecurityFilterChain authFilterChain(HttpSecurity http) throws Exception{
-        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
+    public SecurityFilterChain authFilterChain(HttpSecurity http) throws Exception {
+        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
+                new OAuth2AuthorizationServerConfigurer();
 
-        authorizationServerConfigurer.authorizationEndpoint(customizer -> {
-            customizer.consentPage("oauth2/consent");
-        });
+        authorizationServerConfigurer.authorizationEndpoint(
+                customizer -> customizer.consentPage("/oauth2/consent"));
 
-        RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
+        RequestMatcher endpointsMatcher = authorizationServerConfigurer
+                .getEndpointsMatcher();
+
         http.securityMatcher(endpointsMatcher)
                 .authorizeHttpRequests(authorize -> {
                     authorize.anyRequest().authenticated();
@@ -58,97 +60,41 @@ public class AuthorizationServerConfig {
                     exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"));
                 })
                 .apply(authorizationServerConfigurer);
-        return http
-                .formLogin(customizer -> customizer.loginPage("/login"))
-                .build();
+
+        return http.formLogin(customizer -> customizer.loginPage("/login")).build();
     }
 
     @Bean
-    public AuthorizationServerSettings providerSettings(AlgafoodSecurityProperties properties){
+    public AuthorizationServerSettings providerSettings(AlgafoodSecurityProperties properties) {
         return AuthorizationServerSettings.builder()
                 .issuer(properties.getProviderUrl())
                 .build();
     }
 
     @Bean
-    public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder, JdbcOperations jdbcOperations){
-//        RegisteredClient algafoodbackend = RegisteredClient
-//                .withId("1")
-//                .clientId("algafood-backend")
-//                .clientSecret(passwordEncoder.encode("backend123"))
-//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-//                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-//                .scope("READ")
-//                .tokenSettings(TokenSettings.builder()
-//                        .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
-//                        .accessTokenTimeToLive(Duration.ofMinutes(30))
-//                        .build()
-//                )
-//                .build();
-//
-//        RegisteredClient algafoodweb = RegisteredClient
-//                .withId("2")
-//                .clientId("algafood-web")
-//                .clientSecret(passwordEncoder.encode("web123"))
-//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-//                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-//                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-//                .scope("READ")
-//                .scope("WRITE")
-//                .tokenSettings(TokenSettings.builder()
-//                        .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
-//                        .accessTokenTimeToLive(Duration.ofMinutes(15))
-//                        .reuseRefreshTokens(false)
-//                        .refreshTokenTimeToLive(Duration.ofDays(7))
-//                        .build()
-//                )
-//                .redirectUri("http://127.0.0.1:8080/authorized")
-//                .redirectUri("http://127.0.0.1:8080/swagger-ui/oauth2-redirect.html")
-//                .clientSettings(ClientSettings.builder()
-//                        .requireAuthorizationConsent(true)
-//                        .build())
-//                .build();
-//
-//        RegisteredClient foodanalytics = RegisteredClient
-//                .withId("3")
-//                .clientId("food-analytics")
-//                .clientSecret(passwordEncoder.encode("web123"))
-//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-//                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-//                .scope("READ")
-//                .scope("WRITE")
-//                .tokenSettings(TokenSettings.builder()
-//                        .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
-//                        .accessTokenTimeToLive(Duration.ofMinutes(30))
-//                        .build()
-//                )
-//                .redirectUri("http://www.foodanalytics.local:8082")
-//                .clientSettings(ClientSettings.builder()
-//                        .requireAuthorizationConsent(false)
-//                        .build())
-//                .build();
-
+    public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder,
+                                                                 JdbcOperations jdbcOperations) {
         return new JdbcRegisteredClientRepository(jdbcOperations);
     }
 
     @Bean
-    public OAuth2AuthorizationService oAuth2AuthorizationService(JdbcOperations jdbcOperations, RegisteredClientRepository registeredClientRepository){
-
+    public OAuth2AuthorizationService oAuth2AuthorizationService(JdbcOperations jdbcOperations,
+                                                                 RegisteredClientRepository registeredClientRepository) {
         return new JdbcOAuth2AuthorizationService(
-                jdbcOperations, registeredClientRepository
+                jdbcOperations,
+                registeredClientRepository
         );
-
     }
 
     @Bean
-    public JWKSource<SecurityContext> jwkSource(JwtKeyStoreProperties jwtKeyStoreProperties) throws Exception {
-        char[] keyStorePass = jwtKeyStoreProperties.getPassword().toCharArray();
-        String keypairAlias = jwtKeyStoreProperties.getKeypairAlias();
-        Resource jksLocation = jwtKeyStoreProperties.getJksLocation();
+    public JWKSource<SecurityContext> jwkSource(JwtKeyStoreProperties properties) throws Exception {
+        char[] keyStorePass = properties.getPassword().toCharArray();
+        String keypairAlias = properties.getKeypairAlias();
 
+        Resource jksLocation = properties.getJksLocation();
         InputStream inputStream = jksLocation.getInputStream();
         KeyStore keyStore = KeyStore.getInstance("JKS");
-        keyStore.load(inputStream,keyStorePass);
+        keyStore.load(inputStream, keyStorePass);
 
         RSAKey rsaKey = RSAKey.load(keyStore, keypairAlias, keyStorePass);
 
@@ -156,10 +102,10 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
-    public OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer(UsuarioRepository usuarioRepository){
+    public OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer(UsuarioRepository usuarioRepository) {
         return context -> {
             Authentication authentication = context.getPrincipal();
-            if(authentication.getAuthorities() instanceof User){
+            if (authentication.getPrincipal() instanceof User) {
                 User user = (User) authentication.getPrincipal();
 
                 Usuario usuario = usuarioRepository.findByEmail(user.getUsername()).orElseThrow();
@@ -168,6 +114,7 @@ public class AuthorizationServerConfig {
                 for (GrantedAuthority authority : user.getAuthorities()) {
                     authorities.add(authority.getAuthority());
                 }
+
                 context.getClaims().claim("usuario_id", usuario.getId().toString());
                 context.getClaims().claim("authorities", authorities);
             }
@@ -176,15 +123,14 @@ public class AuthorizationServerConfig {
 
     @Bean
     public OAuth2AuthorizationConsentService consentService(JdbcOperations jdbcOperations,
-                                                            RegisteredClientRepository registeredClientRepository){
-
-        return new JdbcOAuth2AuthorizationConsentService(jdbcOperations, registeredClientRepository);
+                                                            RegisteredClientRepository clientRepository) {
+        return new JdbcOAuth2AuthorizationConsentService(jdbcOperations, clientRepository);
     }
 
     @Bean
-    public OAuth2AuthorizationQueryService oAuth2AuthorizationQueryService(JdbcOperations jdbcOperations,
-                                                                           RegisteredClientRepository registeredClientRepository){
-        return new JdbcOAuth2AuthorizationQueryService(jdbcOperations, registeredClientRepository);
+    public OAuth2AuthorizationQueryService auth2AuthorizationQueryService(JdbcOperations jdbcOperations,
+                                                                          RegisteredClientRepository repository) {
+        return new JdbcOAuth2AuthorizationQueryService(jdbcOperations, repository);
     }
 
 }
